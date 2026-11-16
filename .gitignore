@@ -1,0 +1,16 @@
+# Personal material: photos, the message, rendered films, scratch work, personal notes. Never commit.
+hero_photos/*
+!hero_photos/README.txt
+work/
+*.mp4
+*.mp3
+*.wav
+settings.json
+message.txt
+HANDOFF.md
+BIRTHDAY_PROJECT_BRIEF.md
+README_SETTINGS.md
+compose.py
+
+__pycache__/
+*.pyc

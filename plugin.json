@@ -1,0 +1,144 @@
+{
+  "api": 1,
+  "id": "birthday",
+  "name": "Birthday video",
+  "version": "1.0.0",
+  "description": "A personal birthday film: a name drawn in the night sky, photos gathering into a mosaic portrait, your message and a music finale.",
+  "chips": ["Name + message", "Music", "9:16 video"],
+  "entry": "plugin.py",
+  "needs": "mosaic",
+  "photos": {
+    "title": "Choose the photos",
+    "subtitle": "The photos that gather into the mosaic, and the main picture (usually a portrait of the birthday person) they form."
+  },
+  "mosaic": {
+    "settings": {
+      "num_tiles": 3000, "cell_px": 128, "cache_px": 256, "max_uses": 12, "min_distance": 6.0,
+      "use_subtiles": true, "subtile_percent": 25.0, "tint": 0.7, "main_blend": 0.15, "subject_weight": 0.7,
+      "mosaic_aspect": "9:16", "video_aspect": "9:16", "seed": 42
+    }
+  },
+  "stages": [["render", "Make the film"]],
+  "button": "Create birthday video",
+  "result": {"title": "Your birthday video"},
+  "summary": ["people.her_name", "people.my_name", "people.date_text", "files.music", "files.hero_photos_dir"],
+  "preview": {"start": 40, "seconds": 20},
+
+  "steps": [
+    {
+      "id": "people",
+      "title": "Names and message",
+      "subtitle": "Who the film is for, who it is from, and what you want to say.",
+      "sections": [
+        {
+          "title": "The people",
+          "fields": [
+            {"key": "people.her_name", "type": "text", "label": "Birthday person's name", "required": true,
+             "help": "Drawn in the night sky as a gold constellation and shown large after the mosaic forms."},
+            {"key": "people.my_name", "type": "text", "label": "Your name", "required": true,
+             "help": "Signs off the film: “Forever yours, <your name>”."},
+            {"key": "people.date_text", "type": "text", "label": "Date line", "default": "",
+             "help": "Small text under the name, for example 16  ·  NOVEMBER. Leave empty to skip it."}
+          ]
+        },
+        {
+          "title": "Your message",
+          "subtitle": "Leave a blank line between paragraphs. One photo lifts out of the mosaic beside each paragraph. If the first paragraph ends with a comma (like “Priya,”) it is shown as a large greeting.",
+          "fields": [
+            {"key": "message", "type": "multiline", "label": "Message", "required": true,
+             "default": "Dear friend,\n\nYou make every room warmer just by walking into it.\n\nThank you for being exactly who you are.\n\nI hope this year is as kind to you as you are to everyone else."}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "words",
+      "title": "Wording",
+      "subtitle": "The small texts that appear during the film. The defaults work well; change them to make it yours.",
+      "sections": [
+        {
+          "title": "Opening",
+          "fields": [
+            {"key": "text.opening_lines", "type": "list", "label": "Opening lines", "default": ["Some days deserve", "to be remembered."],
+             "help": "Shown in the dark sky at the very start. One line per row."},
+            {"key": "text.subtitle", "type": "text", "label": "Subtitle", "default": "a  little  film  for  you"}
+          ]
+        },
+        {
+          "title": "Mosaic and finale",
+          "fields": [
+            {"key": "text.mosaic_caption", "type": "list", "label": "Caption over the mosaic", "default": ["Every little moment", "led to you."]},
+            {"key": "text.mosaic_greeting", "type": "text", "label": "Greeting before the name", "default": "Happy Birthday,"},
+            {"key": "text.finale_line1", "type": "text", "label": "Finale, small line", "default": "Happy Birthday,"},
+            {"key": "text.finale_line2", "type": "text", "label": "Finale, big line", "default": "my love."},
+            {"key": "text.signoff_lead", "type": "text", "label": "Sign-off", "default": "Forever yours,"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "media",
+      "title": "Photos and music",
+      "subtitle": "Optional featured photos and the song that plays under the film.",
+      "sections": [
+        {
+          "title": "Featured photos",
+          "subtitle": "Photos in this folder (named 01_..., 02_... in the order you want) become the framed pictures that lift out beside each paragraph. Without a folder, good photos are picked automatically from your tiles.",
+          "fields": [
+            {"key": "files.hero_photos_dir", "type": "folder", "label": "Featured photos folder", "default": "",
+             "prompt": "Choose the folder of featured photos"}
+          ]
+        },
+        {
+          "title": "Music",
+          "fields": [
+            {"key": "files.music", "type": "file", "label": "Song", "default": "", "filter": "Audio (*.mp3 *.wav *.m4a *.flac *.aac)",
+             "prompt": "Choose a song", "help": "Plays from the start and fades out at the end. Leave empty for a silent film."},
+            {"key": "music.volume", "type": "number", "label": "Volume", "default": 1.0, "min": 0.2, "max": 1.5, "step": 0.05, "advanced": true},
+            {"key": "music.fade_in", "type": "number", "label": "Fade in", "default": 2.5, "min": 0, "max": 8, "step": 0.5, "unit": "s", "advanced": true},
+            {"key": "music.fade_out", "type": "number", "label": "Fade out", "default": 8.0, "min": 0, "max": 20, "step": 0.5, "unit": "s", "advanced": true}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "look",
+      "title": "Look and pacing",
+      "subtitle": "Colours, reading speed and the film's overall grade.",
+      "sections": [
+        {
+          "title": "Colours",
+          "fields": [
+            {"key": "colors.gold", "type": "color", "label": "Accent colour", "default": "#E6BC6C"},
+            {"key": "colors.ivory", "type": "color", "label": "Text colour", "default": "#F6EEDE"}
+          ]
+        },
+        {
+          "title": "Pacing",
+          "fields": [
+            {"key": "timeline.reading_seconds_per_word", "type": "number", "label": "Reading time per word", "default": 0.38,
+             "min": 0.2, "max": 0.8, "step": 0.02, "unit": "s",
+             "help": "How long each message paragraph stays on screen. Lower is faster; the film gets shorter."},
+            {"key": "nightsky.style", "type": "choice", "label": "Mosaic animation style", "default": "swarm",
+             "options": [["swarm", "Swarm"], ["vortex", "Vortex"], ["wave", "Wave"], ["zoom", "Zoom"]],
+             "help": "How the photos gather into the portrait and how the camera moves while they do: Swarm = tiles swoop in while the camera sweeps; Vortex = the camera circles as tiles spiral in; Wave = a wave of tiles sweeps across; Zoom = starts macro-close and pulls straight back."},
+            {"key": "nightsky.formation_start", "type": "number", "label": "Mosaic starts forming at", "default": 24.0,
+             "min": 10, "max": 40, "step": 0.5, "unit": "s", "advanced": true},
+            {"key": "nightsky.formation_length", "type": "number", "label": "Mosaic formation length", "default": 22.0,
+             "min": 10, "max": 40, "step": 0.5, "unit": "s", "advanced": true}
+          ]
+        },
+        {
+          "title": "Grade",
+          "fields": [
+            {"key": "mosaic_grade.saturation", "type": "number", "label": "Mosaic colour strength", "default": 1.25, "min": 0.6, "max": 1.8, "step": 0.05},
+            {"key": "grade.bloom", "type": "number", "label": "Glow", "default": 0.45, "min": 0, "max": 1, "step": 0.05},
+            {"key": "grade.grain", "type": "number", "label": "Film grain", "default": 0.7, "min": 0, "max": 1.5, "step": 0.05},
+            {"key": "grade.vignette", "type": "number", "label": "Dark edges", "default": 0.34, "min": 0, "max": 0.8, "step": 0.02},
+            {"key": "output.crf", "type": "number", "label": "Video quality (lower = better, bigger file)", "default": 24, "min": 16, "max": 32, "step": 1, "advanced": true}
+          ]
+        }
+      ]
+    }
+  ]
+}
