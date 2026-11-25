@@ -47,6 +47,7 @@ def path_of(p):
 IVORY, GOLD = hexrgb(C["colors"]["ivory"]), hexrgb(C["colors"]["gold"])
 HER, ME = C["people"]["her_name"], C["people"]["my_name"]
 TX, FN, TL, MO, GR, NS = C["text"], C["fonts"], C["timeline"], C["motion"], C["grade"], C["nightsky"]
+LY, HZ = C["layout"], C["heroes"]
 MSG = path_of(TX["message_file"])
 SERIF, SERIF_I, SANS_L = FN["serif"], FN["serif_italic"], FN["sans_light"]
 
@@ -258,8 +259,8 @@ def build_cards():
         sal = i == 0 and p.endswith(",")
         fnt = F(SERIF_I, FN["salutation_size"] if sal else FN["message_size"])
         color = GOLD if sal else IVORY
-        lines = [p] if sal else wrap(p, fnt, 880)
-        lh = 170 if sal else int(fnt.size * 1.64)
+        lines = [p] if sal else wrap(p, fnt, LY["wrap_width"])
+        lh = 170 if sal else int(fnt.size * LY["line_height"])
         words, k = [], 0
         for li, line in enumerate(lines):
             x0 = (W - fnt.getlength(line)) / 2
@@ -283,13 +284,15 @@ T_FIN0 = T_MSG1 + 0.2
 TOTAL = T_FIN0 + FIN_D
 lifts = []
 for j, c in enumerate([c for c in CARDS if not c["sal"]]):
-    ny = 0.60 if j % 2 == 0 else -0.60
-    lifts.append((c["t0"] - 0.6, c["t1"] + 0.9, 0.0, ny, 0.86))
+    ny = HZ["offset_y"] if j % 2 == 0 else -HZ["offset_y"]
+    lifts.append((c["t0"] - HZ["lead"], c["t1"] + HZ["tail"], 0.0, ny, HZ["size"]))
 TLW = dict(name_in=T_NAME_IN, name_draw=T_NAME_DRAW, name_hold_end=T_HOLD_END, form0=T_E0, form_len=D_FORM,
            msg0=T_MSG0, msg1=T_MSG1, fin0=T_FIN0, end=TOTAL,
            name_z=NS["name_z"], name_y=NS["name_y"], name_width=NS["name_width"],
            message_exposure=NS["message_exposure"], final_width=NS["final_mosaic_width"], lifts=lifts,
-           style=NS.get("style", "swarm"))
+           style=NS.get("style", "swarm"),
+           fx=dict(stars=C["stars"], sky=C["sky"], name_style=C["name_style"], heroes=HZ,
+                   name_rgb=tuple(v / 255 for v in hexrgb(C["name_style"]["color"]))))
 
 from world import World  # noqa: E402  (needs the GL context above to exist first)
 
@@ -298,19 +301,19 @@ WORLD = World(ctx, W, H, TLW, path_of(C["files"]["scene_json"]), path_of(C["file
 print(f"cards={len(CARDS)} lifts={len(lifts)} formation={T_E0:.1f}-{T_E0 + D_FORM:.1f}s msg={T_MSG0:.1f}-{T_MSG1:.1f}s TOTAL={TOTAL:.1f}s", flush=True)
 
 # ================================================================ typography assets
-OPEN_LINES = [line_layer(l, F(SERIF_I, 58), IVORY) for l in TX["opening_lines"]]
-DATE_L = line_layer(C["people"]["date_text"], F(SANS_L, 40), IVORY, 14)
-SUB_L = line_layer(TX["subtitle"], F(SERIF_I, 40), IVORY, 3)
-CAP = [line_layer(l, F(SERIF_I, 66), IVORY) for l in TX["mosaic_caption"]]
-GREET_A = line_layer(TX["mosaic_greeting"], F(SERIF_I, 76), IVORY)
-_nf = F(SERIF, 170)
+OPEN_LINES = [line_layer(l, F(SERIF_I, LY["opening_size"]), IVORY) for l in TX["opening_lines"]]
+DATE_L = line_layer(C["people"]["date_text"], F(SANS_L, LY["subtitle_size"]), IVORY, 14)
+SUB_L = line_layer(TX["subtitle"], F(SERIF_I, LY["subtitle_size"]), IVORY, 3)
+CAP = [line_layer(l, F(SERIF_I, LY["caption_size"]), IVORY) for l in TX["mosaic_caption"]]
+GREET_A = line_layer(TX["mosaic_greeting"], F(SERIF_I, LY["greeting_size"]), IVORY)
+_nf = F(SERIF, LY["name_max_size"])
 while _nf.getlength(HER) > 900:
     _nf = F(SERIF, _nf.size - 6)
 GREET_B = line_layer(HER, _nf, GOLD)
-FIN_A = line_layer(TX["finale_line1"], F(SERIF_I, 66), IVORY)
-FIN_B = line_layer(TX["finale_line2"], F(SERIF_I, 136), GOLD)
-FIN_C = line_layer(TX["signoff_lead"], F(SERIF_I, 40), IVORY)
-FIN_D_L = line_layer(ME, F(SERIF_I, 70), GOLD)
+FIN_A = line_layer(TX["finale_line1"], F(SERIF_I, LY["finale_small_size"]), IVORY)
+FIN_B = line_layer(TX["finale_line2"], F(SERIF_I, LY["finale_big_size"]), GOLD)
+FIN_C = line_layer(TX["signoff_lead"], F(SERIF_I, LY["signoff_size"]), IVORY)
+FIN_D_L = line_layer(ME, F(SERIF_I, LY["final_name_size"]), GOLD)
 
 
 # ================================================================ frame
@@ -328,7 +331,7 @@ def draw_text(t):
     draw_layer(SUB_L, W / 2, 1065, a * fo2 * 0.8, dy, bl)
     # greeting once the mosaic has formed
     g = T_GREET
-    draw_scrim(0.55 * ramp(t, g, g + 1.5) * (1 - ramp(t, T_MSG0 - 2.0, T_MSG0 - 0.3)))
+    draw_scrim(LY["scrim"] * ramp(t, g, g + 1.5) * (1 - ramp(t, T_MSG0 - 2.0, T_MSG0 - 0.3)))
     fc = 1 - ramp(t, g + 6.2, g + 7.4)
     for i, L in enumerate(CAP):
         a, dy, bl = reveal(t, g + 1.0 + 0.4 * i, 1.4)
@@ -342,7 +345,7 @@ def draw_text(t):
     # message
     for c in CARDS:
         if c["t0"] - 0.1 <= t <= c["t1"] + 0.1:
-            top = H * 0.47 - (c["nlines"] * c["lh"]) / 2
+            top = H * LY["message_y"] - (c["nlines"] * c["lh"]) / 2
             fo3 = 1 - ramp(t, c["t1"] - 0.9, c["t1"])
             for wd in c["words"]:
                 a, dy, bl = reveal(t, c["t0"] + 0.4 + STAG * wd["k"], 1.0)
@@ -375,7 +378,7 @@ def render(t, yuv=False):
     ctx.disable(moderngl.BLEND)
     ACC_T.use(0)
     p_post["acc"].value = 0
-    p_post["fade"].value = ramp(t, TOTAL - 3.5, TOTAL - 0.2)
+    p_post["fade"].value = ramp(t, TOTAL - LY["fade_out"], TOTAL - 0.2)
     p_post["seed"].value = float(int(t * FPS) % 6) * 7.31
     p_post["warm"].value = tuple(GR["warmth"]); p_post["teal"].value = tuple(GR["shadow_tint"])
     p_post["vig"].value, p_post["grain"].value = GR["vignette"], GR["grain"]
@@ -406,7 +409,7 @@ def audio_filter():
         # plain playback from 0:00, no jump and no tempo change: the song's own build (about 1:40-2:05) carries the later lines
         return (f"[1:a]atrim=0:{TOTAL:.3f},asetpts=PTS-STARTPTS,afade=t=in:st=0:d={M['fade_in']},"
                 f"afade=t=out:st={TOTAL - M['fade_out']:.3f}:d={M['fade_out']},volume={M['volume']}[a]")
-    XF = 2.4
+    XF = float(M.get("crossfade", 2.4))
     bar0, bar = 0.706, 2.424
     k_cut = round((T_GREET - 0.3 - bar0) / bar)
     T1 = bar0 + bar * k_cut                           # video time of the cut (song time == video time before it)

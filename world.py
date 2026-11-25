@@ -217,7 +217,7 @@ void main() { gl_Position = vec4(in_vert * 2.0, 0.999, 1.0); v_uv = in_vert + 0.
 """
 BACK_FS = """
 #version 330
-in vec2 v_uv; uniform float u_time; uniform vec2 u_shift; uniform float u_glow; uniform vec2 u_gpos; uniform vec2 u_res;
+in vec2 v_uv; uniform float u_time; uniform vec2 u_shift; uniform float u_glow; uniform vec2 u_gpos; uniform vec2 u_res; uniform float u_neb;
 out vec4 f_color;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
 float noise(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -230,7 +230,7 @@ void main() {
     col = mix(col, mid, exp(-pow((uv.y - 0.45) * 2.2, 2.0)));
     float n = fbm(uv * vec2(2.2, 3.6) + u_shift * 3.0 + vec2(0.0, u_time * 0.004));
     float n2 = fbm(uv * vec2(4.0, 6.0) - u_shift * 5.0 + 7.3 + u_time * 0.003);
-    col += vec3(0.020, 0.075, 0.085) * pow(n, 2.6) * 1.7 + vec3(0.055, 0.028, 0.070) * pow(n2, 3.0) * 0.9;
+    col += vec3(0.020, 0.075, 0.085) * pow(n, 2.6) * 1.7 * u_neb + vec3(0.055, 0.028, 0.070) * pow(n2, 3.0) * 0.9 * u_neb;
     vec2 d = uv - u_gpos;
     col += vec3(0.90, 0.60, 0.26) * 0.075 * u_glow * exp(-dot(d * vec2(1.0, 0.55), d * vec2(1.0, 0.55)) * 6.0);
     col *= mix(0.55, 1.0, smoothstep(0.95, 0.15, length((uv - 0.5) * vec2(1.0, 1.1))));
@@ -333,6 +333,7 @@ def load_user_photos(folder, px=512):
 class World:
     def __init__(self, ctx, W, H, tl, scene_json, cache_dir, name, name_font, grade=None, hero_dir=None, seed=7):
         self.ctx, self.W, self.H, self.tl = ctx, W, H, tl
+        self.fx = tl.get("fx") or {}
         self.aspect = W / H
         g = grade or {}
         self.g_tint = tuple(float(v) * float(g.get("brightness", 1.0)) for v in g.get("tint", (1, 1, 1)))
@@ -520,13 +521,13 @@ class World:
                 xm = ((ap[i, 0] + ap[(i + 1) % n, 0]) / 2) / Wm
                 ta = t_in + xm * dd + rng.uniform(0, 0.25)
                 lines.append([*a, ta, *b, 0.0])
-                nodes.append([*a, 11.0 + rng.uniform(0, 6.0), rng.uniform(0, 6.28), rng.uniform(0.8, 1.0), ta - 0.1, 0.0])
+                nodes.append([*a, (11.0 + rng.uniform(0, 6.0)) * float(self.fx.get('name_style', {}).get('star_size', 1.0)), rng.uniform(0, 6.28), rng.uniform(0.8, 1.0), ta - 0.1, 0.0])
         ys, xs = np.nonzero(mask)
-        pick = rng.choice(len(xs), 520, replace=False)
+        pick = rng.choice(len(xs), min(len(xs), int(self.fx.get('stars', {}).get('name_dust', 520))), replace=False)
         for k in pick:
             x, y = xs[k], ys[k]
             ta = t_in + (x / Wm) * dd + rng.uniform(0.2, 1.8)
-            nodes.append([(x - Wm / 2) * sc, -(y - Hm / 2) * sc + cy, zn + rng.normal(0, 0.8), 2.6 + rng.uniform(0, 2.6),
+            nodes.append([(x - Wm / 2) * sc, -(y - Hm / 2) * sc + cy, zn + rng.normal(0, 0.8), (2.6 + rng.uniform(0, 2.6)) * float(self.fx.get('name_style', {}).get('star_size', 1.0)),
                           rng.uniform(0, 6.28), rng.uniform(0.35, 0.8), ta, 0.0])
         self.lines = np.array(lines, np.float32)
         self.name_nodes = np.array(nodes, np.float32)
@@ -534,7 +535,7 @@ class World:
     # ------------------------------------------------------------ far stars + dust
     def _build_far(self):
         rng = self.rng
-        n = 1500
+        n = int(self.fx.get('stars', {}).get('far_count', 1500))
         z = rng.uniform(-520, 300, n)
         dref = 330 - z
         x = rng.uniform(-1, 1, n) * (0.22 * dref + 12)
@@ -544,7 +545,7 @@ class World:
         b = np.stack([rng.uniform(0, 6.28, n), rng.uniform(0.25, 0.95, n), rng.uniform(0, 3, n), np.zeros(n)], 1)
         # approach stars: laid out along the camera's real flight path so the fly-through is a rush of stars, never empty sky
         th, T0 = self.tl["name_hold_end"], self.tl["form0"]
-        na = 3600
+        na = int(self.fx.get('stars', {}).get('approach_count', 3600))
         pa, pb = [], []
         for t_ in rng.uniform(th - 2, T0 + 5, na):
             eye, target, roll = self.camera(float(t_))
@@ -558,11 +559,12 @@ class World:
         a = np.concatenate([a, np.array(pa)], 0)
         b = np.concatenate([b, np.array(pb)], 0)
         self.far = np.concatenate([a, b], 1).astype(np.float32)
-        nb = 26
+        nb = int(self.fx.get('stars', {}).get('bokeh_count', 26))
+        _bs = float(self.fx.get('stars', {}).get('bokeh_size', 1.0)); _bb = float(self.fx.get('stars', {}).get('bokeh_brightness', 1.0))
         z = rng.uniform(40, 300, nb); dref = 330 - z
         a = np.stack([rng.uniform(-1, 1, nb) * (0.2 * dref + 10), rng.uniform(-1, 1, nb) * (0.34 * dref + 10), z,
-                      rng.uniform(40, 110, nb)], 1)
-        b = np.stack([rng.uniform(0, 6.28, nb), rng.uniform(0.06, 0.16, nb), np.full(nb, 2.0), np.zeros(nb)], 1)
+                      rng.uniform(40, 110, nb) * _bs], 1)
+        b = np.stack([rng.uniform(0, 6.28, nb), rng.uniform(0.06, 0.16, nb) * _bb, np.full(nb, 2.0), np.zeros(nb)], 1)
         self.dust = np.concatenate([a, b], 1).astype(np.float32)
 
     # ------------------------------------------------------------ hero photos
@@ -745,7 +747,8 @@ class World:
         if not (h["t0"] <= t <= h["t1"]):
             return None
         ci = h["cell"]
-        d_out, d_back = 2.0, 1.8
+        hz = self.fx.get('heroes', {})
+        d_out, d_back = float(hz.get('lift_in', 2.0)), float(hz.get('lift_out', 1.8))
         a_, b_ = h["t0"], h["t1"]
         if t < a_ + d_out:
             sgl = ease_out((t - a_) / d_out)
@@ -759,10 +762,10 @@ class World:
         nx, ny = h["ndc"]
         tgt = eye + f * dh + r * (nx * 0.5 * visw) + u * (ny * 0.5 * vish)
         cell = np.array([self.wx[ci], self.wy[ci], 0.0])
-        bul = np.sin(math.pi * sgl) * 0.18 * dh
+        bul = np.sin(math.pi * sgl) * float(hz.get('bulge', 0.18)) * dh
         pos = cell * (1 - sgl) + tgt * sgl + (r * h["side"] + f * -0.4) * bul
         size = self.size[ci] * (1 - sgl) + (h["nsize"] * 0.5 * visw) * sgl
-        ry = sgl * (0.30 * h["side"] + 0.07 * math.sin(t * 0.8))
+        ry = sgl * (float(hz.get('tilt', 0.30)) * h["side"] + 0.07 * math.sin(t * 0.8))
         rx = sgl * (-0.10 + 0.04 * math.sin(t * 0.6 + 1))
         return pos, size, rx, ry, 1.0 - smooth(b_ - 0.5, b_, t)
 
@@ -785,7 +788,8 @@ class World:
         pb = self.p_back
         pb["u_time"].value = t
         pb["u_shift"].value = (float(eye[0]) * 0.004, float(eye[1]) * 0.004)
-        pb["u_glow"].value = master * float(np.clip(self.glow_fade(t) * 1.2 + 0.25 * smooth(18, 40, t), 0, 1.2))
+        pb["u_glow"].value = master * float(self.fx.get('sky', {}).get('glow', 1.0)) * float(np.clip(self.glow_fade(t) * 1.2 + 0.25 * smooth(18, 40, t), 0, 1.2))
+        pb["u_neb"].value = float(self.fx.get('sky', {}).get('nebula', 1.0))
         pb["u_gpos"].value = (0.5, 0.5)
         ctx.depth_mask = False
         self.vao_back.render(moderngl.TRIANGLE_STRIP)
@@ -819,22 +823,22 @@ class World:
         ctx.depth_mask = False
         ctx.blend_func = moderngl.ONE, moderngl.ONE
         ph = self.p_halo
-        ph["u_time"].value = t; ph["u_stars"].value = 0.95 * master
+        ph["u_time"].value = t; ph["u_stars"].value = float(self.fx.get('stars', {}).get('photo_star_strength', 0.95)) * master
         ph["u_right"].value = tuple(float(v) for v in r); ph["u_up"].value = tuple(float(v) for v in u)
         ph["u_eye"].value = tuple(float(v) for v in eye); ph["u_fwd"].value = tuple(float(v) for v in f)
         self.vao_halo.render(moderngl.TRIANGLE_STRIP, instances=self.N)
         ps = self.p_sprite
         ps["u_time"].value = t; ps["u_cam"].value = tuple(float(v) for v in eye)
         ps["u_mode"].value = 0.0; ps["u_col"].value = (0.80, 0.88, 1.0)
-        ps["u_gain"].value = 0.95 * master * (1.0 - 0.35 * smooth(self.tl["msg0"], self.tl["msg0"] + 3, t) * (1 - smooth(self.tl["fin0"], self.tl["fin0"] + 4, t)))
+        ps["u_gain"].value = float(self.fx.get('stars', {}).get('brightness', 0.95)) * master * (1.0 - 0.35 * smooth(self.tl["msg0"], self.tl["msg0"] + 3, t) * (1 - smooth(self.tl["fin0"], self.tl["fin0"] + 4, t)))
         self.vao_far.render(moderngl.TRIANGLE_STRIP, instances=self.n_far)
         ps["u_mode"].value = 1.0; ps["u_col"].value = (0.95, 0.72, 0.42); ps["u_gain"].value = master * 0.9
         self.vao_dust.render(moderngl.TRIANGLE_STRIP, instances=self.n_dust)
-        ps["u_mode"].value = 0.0; ps["u_col"].value = (1.0, 0.86, 0.60); ps["u_gain"].value = 1.35
+        ps["u_mode"].value = 0.0; ps["u_col"].value = (1.0, 0.86, 0.60); ps["u_gain"].value = 1.35 * float(self.fx.get('name_style', {}).get('glow', 1.0))
         self.vao_nodes.render(moderngl.TRIANGLE_STRIP, instances=self.n_nodes)
         pl = self.p_line
-        pl["u_time"].value = t; pl["u_width"].value = 3.2; pl["u_cam"].value = tuple(float(v) for v in eye)
-        pl["u_col"].value = (1.0, 0.82, 0.55); pl["u_gain"].value = 1.4
+        pl["u_time"].value = t; pl["u_width"].value = float(self.fx.get('name_style', {}).get('line_width', 3.2)); pl["u_cam"].value = tuple(float(v) for v in eye)
+        pl["u_col"].value = tuple(self.fx.get('name_rgb', (1.0, 0.82, 0.55))); pl["u_gain"].value = 1.4 * float(self.fx.get('name_style', {}).get('glow', 1.0))
         self.vao_line.render(moderngl.TRIANGLE_STRIP, instances=self.n_lines)
         # 5) portrait overlay + light sweep
         ramp, shine = self.overlay_ramp(t), self.shine_pos(t)
@@ -859,7 +863,7 @@ class World:
             ph_["u_size"].value = float(size); ph_["u_rx"].value = float(rx); ph_["u_ry"].value = float(ry)
             ph_["u_alpha"].value = float(a * master); ph_["u_layer"].value = float(h["layer"])
             ph_["u_off"].value = tuple(float(v) for v in h["off"])
-            ph_["u_border"].value = 0.02
+            ph_["u_border"].value = float(self.fx.get('heroes', {}).get('border', 0.02))
             ctx.blend_func = moderngl.SRC_ALPHA, moderngl.ONE_MINUS_SRC_ALPHA
             ph_["u_mode"].value = 0.0; ph_["u_scale"].value = 1.25
             self.vao_hero.render(moderngl.TRIANGLE_STRIP)

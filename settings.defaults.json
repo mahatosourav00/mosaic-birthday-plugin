@@ -1,23 +1,26 @@
 {
   "_about": "All adjustable settings for the birthday video. Edit values, save, then run render (see README_SETTINGS.md). Any key you delete falls back to its built-in default. Colours are hex. Times are seconds.",
-
   "people": {
     "her_name": "",
     "my_name": "",
     "date_text": ""
   },
-
   "text": {
-    "opening_lines": ["Some days deserve", "to be remembered."],
+    "opening_lines": [
+      "Some days deserve",
+      "to be remembered."
+    ],
     "subtitle": "a  little  film  for  you",
-    "mosaic_caption": ["Every little moment", "led to you."],
+    "mosaic_caption": [
+      "Every little moment",
+      "led to you."
+    ],
     "mosaic_greeting": "Happy Birthday,",
     "finale_line1": "Happy Birthday,",
     "finale_line2": "my love.",
     "signoff_lead": "Forever yours,",
     "message_file": "message.txt"
   },
-
   "nightsky": {
     "_help": "The Night Sky film (film.py). Times in seconds. The name is drawn as a constellation, the camera flies through it, her photos gather into the mosaic, then the message plays while single photos lift out of it.",
     "name_in": 7.0,
@@ -32,7 +35,6 @@
     "message_exposure": 0.36,
     "final_mosaic_width": 0.68
   },
-
   "fonts": {
     "_help": "File names inside C:\\Windows\\Fonts. Sizes are pixels on the 1080x1920 canvas.",
     "serif": "georgia.ttf",
@@ -42,12 +44,10 @@
     "message_size": 56,
     "salutation_size": 112
   },
-
   "colors": {
     "gold": "#E6BC6C",
     "ivory": "#F6EEDE"
   },
-
   "files": {
     "_help": "Relative paths are resolved against this project folder.",
     "main_photo": "",
@@ -58,81 +58,110 @@
     "scene_json": "work\\mosaic\\scene.json",
     "scene_cache": "work\\mosaic\\cache"
   },
-
   "timeline": {
     "_help": "Mosaic clip length is read from the clip itself. reading_seconds_per_word controls how long each message paragraph stays on screen.",
-    "title_start": 5.8,
-    "mosaic_start": 13.0,
-    "mosaic_hold": 8.0,
     "finale_length": 28.0,
     "reading_seconds_per_word": 0.22,
     "salutation_seconds": 3.2
   },
-
   "music": {
     "_help": "The song is played from 0:00 through the message, then jumps to finale_song_start so its loudest part lands under the final portrait.",
-    "finale_song_start": 96.0,
     "climax_bar": 41,
     "song_length": 188.0,
     "fade_in": 2.5,
     "fade_out": 5.5,
-    "volume": 1.0
+    "volume": 1.0,
+    "crossfade": 2.4
   },
-
   "grade": {
     "_help": "Global look applied to every scene. warmth = R,G,B gain. shadow_tint = colour added to dark areas (teal). bloom = glow around bright areas. chromatic_aberration = subtle colour fringe at the edges.",
-    "warmth": [1.03, 1.0, 0.96],
-    "shadow_tint": [0, 5, 6],
+    "warmth": [
+      1.03,
+      1.0,
+      0.96
+    ],
+    "shadow_tint": [
+      0,
+      5,
+      6
+    ],
     "vignette": 0.34,
     "grain": 0.7,
     "bloom": 0.45,
     "bloom_threshold": 100,
     "chromatic_aberration": 0.0025
   },
-
   "mosaic_grade": {
     "_help": "Extra grade for the mosaic section only. Lower red / raise blue in tint to cool it down; raise saturation for more vibrance.",
     "saturation": 1.25,
     "contrast": 1.08,
-    "tint": [0.88, 1.0, 1.17],
+    "tint": [
+      0.88,
+      1.0,
+      1.17
+    ],
     "brightness": 1.0,
     "yellow_suppress": 0.55
   },
-
   "motion": {
     "_help": "0 disables an effect. Higher = more movement.",
     "word_reveal_stagger": 0.09,
     "word_blur_in": 1.0,
-    "title_shine": 1.0,
-    "bg_zoom": 0.12,
-    "bg_rotation_deg": 1.1,
-    "bg_pan": 0.025,
-    "mosaic_hold_push": 0.05,
-    "finale_push": 0.12,
-    "finale_rotation_deg": 0.8,
-    "light_sweeps": 1.0
+    "title_shine": 1.0
   },
-
-  "particles": {
-    "dust_count": 46,
-    "dust_brightness": 1.0,
-    "bokeh_far_count": 16,
-    "bokeh_near_count": 7,
-    "bokeh_brightness": 1.0
-  },
-
-  "transitions": {
-    "_help": "kind: dissolve | iris (circle opens from centre) | sweep (soft wipe upward). push_in zooms the new scene in from slightly larger; push_out zooms the old scene; flash adds a golden glow pulse.",
-    "open_to_title":      {"kind": "dissolve", "duration": 1.4, "push_in": 0.00, "push_out": 0.00, "flash": 0.0},
-    "title_to_mosaic":    {"kind": "iris",     "duration": 1.8, "push_in": 0.10, "push_out": 0.04, "flash": 0.9},
-    "mosaic_to_message":  {"kind": "sweep",    "duration": 1.8, "push_in": 0.08, "push_out": 0.05, "flash": 0.7},
-    "message_to_finale":  {"kind": "dissolve", "duration": 2.0, "push_in": 0.06, "push_out": 0.02, "flash": 0.6}
-  },
-
   "output": {
     "_help": "encoder: x264 (CPU, fastest here) or amf (AMD GPU, slower on this machine). crf: lower = better quality, bigger file.",
-    "encoder": "x264",
     "crf": 24,
     "maxrate_mbps": 10
+  },
+  "stars": {
+    "_help": "Sky and star field. Counts are quantities; brightness and size are multipliers (1 = as designed).",
+    "far_count": 1500,
+    "approach_count": 3600,
+    "brightness": 0.95,
+    "photo_star_strength": 0.95,
+    "bokeh_count": 26,
+    "bokeh_size": 1.0,
+    "bokeh_brightness": 1.0,
+    "name_dust": 520
+  },
+  "sky": {
+    "nebula": 1.0,
+    "glow": 1.0
+  },
+  "name_style": {
+    "line_width": 3.2,
+    "glow": 1.0,
+    "color": "#FFD18C",
+    "star_size": 1.0
+  },
+  "heroes": {
+    "_help": "The framed photos that lift out of the mosaic beside each paragraph.",
+    "lift_in": 2.0,
+    "lift_out": 1.8,
+    "bulge": 0.18,
+    "tilt": 0.3,
+    "border": 0.02,
+    "size": 0.86,
+    "offset_y": 0.6,
+    "lead": 0.6,
+    "tail": 0.9
+  },
+  "layout": {
+    "_help": "Text sizes (pixels on the 1080x1920 canvas) and message layout.",
+    "opening_size": 58,
+    "subtitle_size": 40,
+    "caption_size": 66,
+    "greeting_size": 76,
+    "name_max_size": 170,
+    "finale_small_size": 66,
+    "finale_big_size": 136,
+    "signoff_size": 40,
+    "final_name_size": 70,
+    "wrap_width": 880,
+    "line_height": 1.64,
+    "message_y": 0.47,
+    "scrim": 0.55,
+    "fade_out": 3.5
   }
 }

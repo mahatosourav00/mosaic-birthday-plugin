@@ -4,7 +4,11 @@
   "name": "Birthday video",
   "version": "1.0.0",
   "description": "A personal birthday film: a name drawn in the night sky, photos gathering into a mosaic portrait, your message and a music finale.",
-  "chips": ["Name + message", "Music", "9:16 video"],
+  "chips": [
+    "Name + message",
+    "Music",
+    "9:16 video"
+  ],
   "entry": "plugin.py",
   "needs": "mosaic",
   "photos": {
@@ -13,17 +17,42 @@
   },
   "mosaic": {
     "settings": {
-      "num_tiles": 3000, "cell_px": 128, "cache_px": 256, "max_uses": 12, "min_distance": 6.0,
-      "use_subtiles": true, "subtile_percent": 25.0, "tint": 0.7, "main_blend": 0.15, "subject_weight": 0.7,
-      "mosaic_aspect": "9:16", "video_aspect": "9:16", "seed": 42
+      "num_tiles": 3000,
+      "cell_px": 128,
+      "cache_px": 256,
+      "max_uses": 12,
+      "min_distance": 6.0,
+      "use_subtiles": true,
+      "subtile_percent": 25.0,
+      "tint": 0.7,
+      "main_blend": 0.15,
+      "subject_weight": 0.7,
+      "mosaic_aspect": "9:16",
+      "video_aspect": "9:16",
+      "seed": 42
     }
   },
-  "stages": [["render", "Make the film"]],
+  "stages": [
+    [
+      "render",
+      "Make the film"
+    ]
+  ],
   "button": "Create birthday video",
-  "result": {"title": "Your birthday video"},
-  "summary": ["people.her_name", "people.my_name", "people.date_text", "files.music", "files.hero_photos_dir"],
-  "preview": {"start": 40, "seconds": 20},
-
+  "result": {
+    "title": "Your birthday video"
+  },
+  "summary": [
+    "people.her_name",
+    "people.my_name",
+    "people.date_text",
+    "files.music",
+    "files.hero_photos_dir"
+  ],
+  "preview": {
+    "start": 40,
+    "seconds": 20
+  },
   "steps": [
     {
       "id": "people",
@@ -33,20 +62,40 @@
         {
           "title": "The people",
           "fields": [
-            {"key": "people.her_name", "type": "text", "label": "Birthday person's name", "required": true,
-             "help": "Drawn in the night sky as a gold constellation and shown large after the mosaic forms."},
-            {"key": "people.my_name", "type": "text", "label": "Your name", "required": true,
-             "help": "Signs off the film: “Forever yours, <your name>”."},
-            {"key": "people.date_text", "type": "text", "label": "Date line", "default": "",
-             "help": "Small text under the name, for example 16  ·  NOVEMBER. Leave empty to skip it."}
+            {
+              "key": "people.her_name",
+              "type": "text",
+              "label": "Birthday person's name",
+              "required": true,
+              "help": "Drawn in the night sky as a gold constellation and shown large after the mosaic forms."
+            },
+            {
+              "key": "people.my_name",
+              "type": "text",
+              "label": "Your name",
+              "required": true,
+              "help": "Signs off the film: “Forever yours, <your name>”."
+            },
+            {
+              "key": "people.date_text",
+              "type": "text",
+              "label": "Date line",
+              "default": "",
+              "help": "Small text under the name, for example 16  ·  NOVEMBER. Leave empty to skip it."
+            }
           ]
         },
         {
           "title": "Your message",
           "subtitle": "Leave a blank line between paragraphs. One photo lifts out of the mosaic beside each paragraph. If the first paragraph ends with a comma (like “Priya,”) it is shown as a large greeting.",
           "fields": [
-            {"key": "message", "type": "multiline", "label": "Message", "required": true,
-             "default": "Dear friend,\n\nYou make every room warmer just by walking into it.\n\nThank you for being exactly who you are.\n\nI hope this year is as kind to you as you are to everyone else."}
+            {
+              "key": "message",
+              "type": "multiline",
+              "label": "Message",
+              "required": true,
+              "default": "Dear friend,\n\nYou make every room warmer just by walking into it.\n\nThank you for being exactly who you are.\n\nI hope this year is as kind to you as you are to everyone else."
+            }
           ]
         }
       ]
@@ -59,19 +108,216 @@
         {
           "title": "Opening",
           "fields": [
-            {"key": "text.opening_lines", "type": "list", "label": "Opening lines", "default": ["Some days deserve", "to be remembered."],
-             "help": "Shown in the dark sky at the very start. One line per row."},
-            {"key": "text.subtitle", "type": "text", "label": "Subtitle", "default": "a  little  film  for  you"}
+            {
+              "key": "text.opening_lines",
+              "type": "list",
+              "label": "Opening lines",
+              "default": [
+                "Some days deserve",
+                "to be remembered."
+              ],
+              "help": "Shown in the dark sky at the very start. One line per row."
+            },
+            {
+              "key": "text.subtitle",
+              "type": "text",
+              "label": "Subtitle",
+              "default": "a  little  film  for  you"
+            }
           ]
         },
         {
           "title": "Mosaic and finale",
           "fields": [
-            {"key": "text.mosaic_caption", "type": "list", "label": "Caption over the mosaic", "default": ["Every little moment", "led to you."]},
-            {"key": "text.mosaic_greeting", "type": "text", "label": "Greeting before the name", "default": "Happy Birthday,"},
-            {"key": "text.finale_line1", "type": "text", "label": "Finale, small line", "default": "Happy Birthday,"},
-            {"key": "text.finale_line2", "type": "text", "label": "Finale, big line", "default": "my love."},
-            {"key": "text.signoff_lead", "type": "text", "label": "Sign-off", "default": "Forever yours,"}
+            {
+              "key": "text.mosaic_caption",
+              "type": "list",
+              "label": "Caption over the mosaic",
+              "default": [
+                "Every little moment",
+                "led to you."
+              ]
+            },
+            {
+              "key": "text.mosaic_greeting",
+              "type": "text",
+              "label": "Greeting before the name",
+              "default": "Happy Birthday,"
+            },
+            {
+              "key": "text.finale_line1",
+              "type": "text",
+              "label": "Finale, small line",
+              "default": "Happy Birthday,"
+            },
+            {
+              "key": "text.finale_line2",
+              "type": "text",
+              "label": "Finale, big line",
+              "default": "my love."
+            },
+            {
+              "key": "text.signoff_lead",
+              "type": "text",
+              "label": "Sign-off",
+              "default": "Forever yours,"
+            }
+          ]
+        },
+        {
+          "title": "Text size and layout",
+          "subtitle": "Pixels on the 1080 x 1920 canvas.",
+          "fields": [
+            {
+              "key": "layout.opening_size",
+              "type": "number",
+              "label": "Opening lines",
+              "default": 58,
+              "min": 30,
+              "max": 120,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "layout.subtitle_size",
+              "type": "number",
+              "label": "Subtitle and date",
+              "default": 40,
+              "min": 20,
+              "max": 90,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "layout.caption_size",
+              "type": "number",
+              "label": "Caption",
+              "default": 66,
+              "min": 30,
+              "max": 120,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "layout.greeting_size",
+              "type": "number",
+              "label": "Greeting",
+              "default": 76,
+              "min": 30,
+              "max": 140,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "layout.name_max_size",
+              "type": "number",
+              "label": "Name, largest size",
+              "default": 170,
+              "min": 80,
+              "max": 260,
+              "step": 5,
+              "advanced": true
+            },
+            {
+              "key": "fonts.message_size",
+              "type": "number",
+              "label": "Message",
+              "default": 56,
+              "min": 32,
+              "max": 90,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "fonts.salutation_size",
+              "type": "number",
+              "label": "Large greeting",
+              "default": 112,
+              "min": 60,
+              "max": 180,
+              "step": 4,
+              "advanced": true
+            },
+            {
+              "key": "layout.finale_small_size",
+              "type": "number",
+              "label": "Finale small line",
+              "default": 66,
+              "min": 30,
+              "max": 120,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "layout.finale_big_size",
+              "type": "number",
+              "label": "Finale big line",
+              "default": 136,
+              "min": 60,
+              "max": 220,
+              "step": 4,
+              "advanced": true
+            },
+            {
+              "key": "layout.signoff_size",
+              "type": "number",
+              "label": "Sign-off",
+              "default": 40,
+              "min": 20,
+              "max": 90,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "layout.final_name_size",
+              "type": "number",
+              "label": "Your name",
+              "default": 70,
+              "min": 30,
+              "max": 130,
+              "step": 2,
+              "advanced": true
+            },
+            {
+              "key": "layout.wrap_width",
+              "type": "number",
+              "label": "Message wrap width",
+              "default": 880,
+              "min": 500,
+              "max": 1000,
+              "step": 10,
+              "advanced": true
+            },
+            {
+              "key": "layout.line_height",
+              "type": "number",
+              "label": "Message line spacing",
+              "default": 1.64,
+              "min": 1.2,
+              "max": 2.2,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "layout.message_y",
+              "type": "number",
+              "label": "Message height",
+              "default": 0.47,
+              "min": 0.3,
+              "max": 0.7,
+              "step": 0.01,
+              "advanced": true
+            },
+            {
+              "key": "layout.scrim",
+              "type": "number",
+              "label": "Dark scrim behind greeting",
+              "default": 0.55,
+              "min": 0,
+              "max": 1,
+              "step": 0.05,
+              "advanced": true
+            }
           ]
         }
       ]
@@ -85,18 +331,91 @@
           "title": "Featured photos",
           "subtitle": "Photos in this folder (named 01_..., 02_... in the order you want) become the framed pictures that lift out beside each paragraph. Without a folder, good photos are picked automatically from your tiles.",
           "fields": [
-            {"key": "files.hero_photos_dir", "type": "folder", "label": "Featured photos folder", "default": "",
-             "prompt": "Choose the folder of featured photos"}
+            {
+              "key": "files.hero_photos_dir",
+              "type": "folder",
+              "label": "Featured photos folder",
+              "default": "",
+              "prompt": "Choose the folder of featured photos"
+            }
           ]
         },
         {
           "title": "Music",
           "fields": [
-            {"key": "files.music", "type": "file", "label": "Song", "default": "", "filter": "Audio (*.mp3 *.wav *.m4a *.flac *.aac)",
-             "prompt": "Choose a song", "help": "Plays from the start and fades out at the end. Leave empty for a silent film."},
-            {"key": "music.volume", "type": "number", "label": "Volume", "default": 1.0, "min": 0.2, "max": 1.5, "step": 0.05, "advanced": true},
-            {"key": "music.fade_in", "type": "number", "label": "Fade in", "default": 2.5, "min": 0, "max": 8, "step": 0.5, "unit": "s", "advanced": true},
-            {"key": "music.fade_out", "type": "number", "label": "Fade out", "default": 8.0, "min": 0, "max": 20, "step": 0.5, "unit": "s", "advanced": true}
+            {
+              "key": "files.music",
+              "type": "file",
+              "label": "Song",
+              "default": "",
+              "filter": "Audio (*.mp3 *.wav *.m4a *.flac *.aac)",
+              "prompt": "Choose a song",
+              "help": "Plays from the start and fades out at the end. Leave empty for a silent film."
+            },
+            {
+              "key": "music.volume",
+              "type": "number",
+              "label": "Volume",
+              "default": 1.0,
+              "min": 0.2,
+              "max": 1.5,
+              "step": 0.05,
+              "advanced": true
+            },
+            {
+              "key": "music.fade_in",
+              "type": "number",
+              "label": "Fade in",
+              "default": 2.5,
+              "min": 0,
+              "max": 8,
+              "step": 0.5,
+              "unit": "s",
+              "advanced": true
+            },
+            {
+              "key": "music.fade_out",
+              "type": "number",
+              "label": "Fade out",
+              "default": 8.0,
+              "min": 0,
+              "max": 20,
+              "step": 0.5,
+              "unit": "s",
+              "advanced": true
+            },
+            {
+              "key": "music.crossfade",
+              "type": "number",
+              "label": "Song jump crossfade",
+              "default": 2.4,
+              "min": 0.5,
+              "max": 6,
+              "step": 0.1,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "music.climax_bar",
+              "type": "number",
+              "label": "Loudest part starts at bar",
+              "default": 41,
+              "min": 1,
+              "max": 100,
+              "step": 1,
+              "advanced": true
+            },
+            {
+              "key": "music.song_length",
+              "type": "number",
+              "label": "Song length",
+              "default": 188,
+              "min": 30,
+              "max": 600,
+              "step": 1,
+              "advanced": true,
+              "unit": "s"
+            }
           ]
         }
       ]
@@ -109,33 +428,569 @@
         {
           "title": "Colours",
           "fields": [
-            {"key": "colors.gold", "type": "color", "label": "Accent colour", "default": "#E6BC6C"},
-            {"key": "colors.ivory", "type": "color", "label": "Text colour", "default": "#F6EEDE"}
+            {
+              "key": "colors.gold",
+              "type": "color",
+              "label": "Accent colour",
+              "default": "#E6BC6C"
+            },
+            {
+              "key": "colors.ivory",
+              "type": "color",
+              "label": "Text colour",
+              "default": "#F6EEDE"
+            }
           ]
         },
         {
           "title": "Pacing",
           "fields": [
-            {"key": "timeline.reading_seconds_per_word", "type": "number", "label": "Reading time per word", "default": 0.38,
-             "min": 0.2, "max": 0.8, "step": 0.02, "unit": "s",
-             "help": "How long each message paragraph stays on screen. Lower is faster; the film gets shorter."},
-            {"key": "nightsky.style", "type": "choice", "label": "Mosaic animation style", "default": "swarm",
-             "options": [["swarm", "Swarm"], ["vortex", "Vortex"], ["wave", "Wave"], ["zoom", "Zoom"]],
-             "help": "How the photos gather into the portrait and how the camera moves while they do: Swarm = tiles swoop in while the camera sweeps; Vortex = the camera circles as tiles spiral in; Wave = a wave of tiles sweeps across; Zoom = starts macro-close and pulls straight back."},
-            {"key": "nightsky.formation_start", "type": "number", "label": "Mosaic starts forming at", "default": 24.0,
-             "min": 10, "max": 40, "step": 0.5, "unit": "s", "advanced": true},
-            {"key": "nightsky.formation_length", "type": "number", "label": "Mosaic formation length", "default": 22.0,
-             "min": 10, "max": 40, "step": 0.5, "unit": "s", "advanced": true}
+            {
+              "key": "timeline.reading_seconds_per_word",
+              "type": "number",
+              "label": "Reading time per word",
+              "default": 0.38,
+              "min": 0.2,
+              "max": 0.8,
+              "step": 0.02,
+              "unit": "s",
+              "help": "How long each message paragraph stays on screen. Lower is faster; the film gets shorter."
+            },
+            {
+              "key": "nightsky.style",
+              "type": "choice",
+              "label": "Mosaic animation style",
+              "default": "swarm",
+              "options": [
+                [
+                  "swarm",
+                  "Swarm"
+                ],
+                [
+                  "vortex",
+                  "Vortex"
+                ],
+                [
+                  "wave",
+                  "Wave"
+                ],
+                [
+                  "zoom",
+                  "Zoom"
+                ]
+              ],
+              "help": "How the photos gather into the portrait and how the camera moves while they do: Swarm = tiles swoop in while the camera sweeps; Vortex = the camera circles as tiles spiral in; Wave = a wave of tiles sweeps across; Zoom = starts macro-close and pulls straight back."
+            },
+            {
+              "key": "nightsky.formation_start",
+              "type": "number",
+              "label": "Mosaic starts forming at",
+              "default": 24.0,
+              "min": 10,
+              "max": 40,
+              "step": 0.5,
+              "unit": "s",
+              "advanced": true
+            },
+            {
+              "key": "nightsky.formation_length",
+              "type": "number",
+              "label": "Mosaic formation length",
+              "default": 22.0,
+              "min": 10,
+              "max": 40,
+              "step": 0.5,
+              "unit": "s",
+              "advanced": true
+            },
+            {
+              "key": "nightsky.name_in",
+              "type": "number",
+              "label": "Name starts drawing at",
+              "default": 7.0,
+              "min": 3,
+              "max": 15,
+              "step": 0.5,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "nightsky.name_draw",
+              "type": "number",
+              "label": "Time to draw the name",
+              "default": 6.5,
+              "min": 2,
+              "max": 14,
+              "step": 0.5,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "nightsky.name_hold_end",
+              "type": "number",
+              "label": "Name held until",
+              "default": 17.0,
+              "min": 8,
+              "max": 30,
+              "step": 0.5,
+              "advanced": true,
+              "unit": "s",
+              "help": "Then the camera flies through it."
+            },
+            {
+              "key": "nightsky.greeting_length",
+              "type": "number",
+              "label": "Greeting length",
+              "default": 14.0,
+              "min": 6,
+              "max": 25,
+              "step": 0.5,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "timeline.salutation_seconds",
+              "type": "number",
+              "label": "Large greeting on screen for",
+              "default": 3.2,
+              "min": 1.5,
+              "max": 8,
+              "step": 0.1,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "timeline.finale_length",
+              "type": "number",
+              "label": "Finale length",
+              "default": 28.0,
+              "min": 15,
+              "max": 45,
+              "step": 1,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "motion.word_reveal_stagger",
+              "type": "number",
+              "label": "Delay between words",
+              "default": 0.09,
+              "min": 0,
+              "max": 0.3,
+              "step": 0.01,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "motion.word_blur_in",
+              "type": "number",
+              "label": "Word blur-in",
+              "default": 1.0,
+              "min": 0,
+              "max": 3,
+              "step": 0.1,
+              "advanced": true
+            },
+            {
+              "key": "motion.title_shine",
+              "type": "number",
+              "label": "Name shine",
+              "default": 1.0,
+              "min": 0,
+              "max": 1.5,
+              "step": 0.1,
+              "advanced": true
+            },
+            {
+              "key": "nightsky.name_width",
+              "type": "number",
+              "label": "Name width",
+              "default": 28.0,
+              "min": 16,
+              "max": 40,
+              "step": 1,
+              "advanced": true
+            },
+            {
+              "key": "nightsky.final_mosaic_width",
+              "type": "number",
+              "label": "Final portrait size",
+              "default": 0.68,
+              "min": 0.4,
+              "max": 0.9,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "nightsky.message_exposure",
+              "type": "number",
+              "label": "Mosaic brightness during message",
+              "default": 0.36,
+              "min": 0.1,
+              "max": 0.9,
+              "step": 0.02,
+              "advanced": true
+            }
           ]
         },
         {
           "title": "Grade",
           "fields": [
-            {"key": "mosaic_grade.saturation", "type": "number", "label": "Mosaic colour strength", "default": 1.25, "min": 0.6, "max": 1.8, "step": 0.05},
-            {"key": "grade.bloom", "type": "number", "label": "Glow", "default": 0.45, "min": 0, "max": 1, "step": 0.05},
-            {"key": "grade.grain", "type": "number", "label": "Film grain", "default": 0.7, "min": 0, "max": 1.5, "step": 0.05},
-            {"key": "grade.vignette", "type": "number", "label": "Dark edges", "default": 0.34, "min": 0, "max": 0.8, "step": 0.02},
-            {"key": "output.crf", "type": "number", "label": "Video quality (lower = better, bigger file)", "default": 24, "min": 16, "max": 32, "step": 1, "advanced": true}
+            {
+              "key": "mosaic_grade.saturation",
+              "type": "number",
+              "label": "Mosaic colour strength",
+              "default": 1.25,
+              "min": 0.6,
+              "max": 1.8,
+              "step": 0.05
+            },
+            {
+              "key": "grade.bloom",
+              "type": "number",
+              "label": "Glow",
+              "default": 0.45,
+              "min": 0,
+              "max": 1,
+              "step": 0.05
+            },
+            {
+              "key": "grade.grain",
+              "type": "number",
+              "label": "Film grain",
+              "default": 0.7,
+              "min": 0,
+              "max": 1.5,
+              "step": 0.05
+            },
+            {
+              "key": "grade.vignette",
+              "type": "number",
+              "label": "Dark edges",
+              "default": 0.34,
+              "min": 0,
+              "max": 0.8,
+              "step": 0.02
+            },
+            {
+              "key": "output.crf",
+              "type": "number",
+              "label": "Video quality (lower = better, bigger file)",
+              "default": 24,
+              "min": 16,
+              "max": 32,
+              "step": 1,
+              "advanced": true
+            },
+            {
+              "key": "grade.chromatic_aberration",
+              "type": "number",
+              "label": "Colour fringe",
+              "default": 0.0025,
+              "min": 0,
+              "max": 0.01,
+              "step": 0.0005,
+              "advanced": true
+            },
+            {
+              "key": "grade.bloom_threshold",
+              "type": "number",
+              "label": "Glow threshold",
+              "default": 100,
+              "min": 0,
+              "max": 255,
+              "step": 5,
+              "advanced": true
+            },
+            {
+              "key": "mosaic_grade.contrast",
+              "type": "number",
+              "label": "Mosaic contrast",
+              "default": 1.08,
+              "min": 0.6,
+              "max": 1.6,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "mosaic_grade.brightness",
+              "type": "number",
+              "label": "Mosaic brightness",
+              "default": 1.0,
+              "min": 0.5,
+              "max": 1.5,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "mosaic_grade.yellow_suppress",
+              "type": "number",
+              "label": "Reduce yellow cast",
+              "default": 0.55,
+              "min": 0,
+              "max": 1,
+              "step": 0.05,
+              "advanced": true
+            },
+            {
+              "key": "layout.fade_out",
+              "type": "number",
+              "label": "Fade to black",
+              "default": 3.5,
+              "min": 0.5,
+              "max": 8,
+              "step": 0.1,
+              "advanced": true,
+              "unit": "s"
+            }
+          ]
+        },
+        {
+          "title": "Stars and sky",
+          "subtitle": "The night sky behind the name and the fly-through.",
+          "fields": [
+            {
+              "key": "stars.far_count",
+              "type": "number",
+              "label": "Distant stars",
+              "default": 1500,
+              "min": 0,
+              "max": 4000,
+              "step": 100,
+              "advanced": true
+            },
+            {
+              "key": "stars.approach_count",
+              "type": "number",
+              "label": "Fly-through stars",
+              "default": 3600,
+              "min": 0,
+              "max": 8000,
+              "step": 100,
+              "advanced": true
+            },
+            {
+              "key": "stars.brightness",
+              "type": "number",
+              "label": "Star brightness",
+              "default": 0.95,
+              "min": 0,
+              "max": 1.6,
+              "step": 0.05,
+              "advanced": true
+            },
+            {
+              "key": "stars.photo_star_strength",
+              "type": "number",
+              "label": "Photo stars brightness",
+              "default": 0.95,
+              "min": 0,
+              "max": 1.6,
+              "step": 0.05,
+              "advanced": true,
+              "help": "Each photo twinkles like a star before it flies in."
+            },
+            {
+              "key": "stars.bokeh_count",
+              "type": "number",
+              "label": "Soft light discs",
+              "default": 26,
+              "min": 0,
+              "max": 80,
+              "step": 1,
+              "advanced": true
+            },
+            {
+              "key": "stars.bokeh_size",
+              "type": "number",
+              "label": "Light disc size",
+              "default": 1.0,
+              "min": 0.4,
+              "max": 2.5,
+              "step": 0.1,
+              "advanced": true
+            },
+            {
+              "key": "stars.bokeh_brightness",
+              "type": "number",
+              "label": "Light disc brightness",
+              "default": 1.0,
+              "min": 0,
+              "max": 3,
+              "step": 0.1,
+              "advanced": true
+            },
+            {
+              "key": "sky.nebula",
+              "type": "number",
+              "label": "Nebula clouds",
+              "default": 1.0,
+              "min": 0,
+              "max": 2.5,
+              "step": 0.1,
+              "advanced": true
+            },
+            {
+              "key": "sky.glow",
+              "type": "number",
+              "label": "Warm sky glow",
+              "default": 1.0,
+              "min": 0,
+              "max": 2.5,
+              "step": 0.1,
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "title": "Name constellation",
+          "fields": [
+            {
+              "key": "name_style.color",
+              "type": "color",
+              "label": "Constellation colour",
+              "default": "#FFD18C"
+            },
+            {
+              "key": "name_style.line_width",
+              "type": "number",
+              "label": "Line thickness",
+              "default": 3.2,
+              "min": 1,
+              "max": 8,
+              "step": 0.2,
+              "advanced": true,
+              "unit": "px"
+            },
+            {
+              "key": "name_style.glow",
+              "type": "number",
+              "label": "Line and star glow",
+              "default": 1.0,
+              "min": 0,
+              "max": 2.5,
+              "step": 0.1,
+              "advanced": true
+            },
+            {
+              "key": "name_style.star_size",
+              "type": "number",
+              "label": "Star size",
+              "default": 1.0,
+              "min": 0.4,
+              "max": 2.5,
+              "step": 0.1,
+              "advanced": true
+            },
+            {
+              "key": "stars.name_dust",
+              "type": "number",
+              "label": "Glitter inside the name",
+              "default": 520,
+              "min": 0,
+              "max": 1500,
+              "step": 20,
+              "advanced": true
+            }
+          ]
+        },
+        {
+          "title": "Featured photo frames",
+          "fields": [
+            {
+              "key": "heroes.lift_in",
+              "type": "number",
+              "label": "Lift-out time",
+              "default": 2.0,
+              "min": 0.8,
+              "max": 4,
+              "step": 0.1,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "heroes.lift_out",
+              "type": "number",
+              "label": "Return time",
+              "default": 1.8,
+              "min": 0.8,
+              "max": 4,
+              "step": 0.1,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "heroes.size",
+              "type": "number",
+              "label": "Photo size",
+              "default": 0.86,
+              "min": 0.4,
+              "max": 1.2,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "heroes.offset_y",
+              "type": "number",
+              "label": "Height above or below centre",
+              "default": 0.6,
+              "min": 0.2,
+              "max": 0.9,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "heroes.bulge",
+              "type": "number",
+              "label": "Arc while flying",
+              "default": 0.18,
+              "min": 0,
+              "max": 0.6,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "heroes.tilt",
+              "type": "number",
+              "label": "Turn",
+              "default": 0.3,
+              "min": 0,
+              "max": 0.8,
+              "step": 0.02,
+              "advanced": true
+            },
+            {
+              "key": "heroes.border",
+              "type": "number",
+              "label": "White border",
+              "default": 0.02,
+              "min": 0,
+              "max": 0.08,
+              "step": 0.005,
+              "advanced": true
+            },
+            {
+              "key": "heroes.lead",
+              "type": "number",
+              "label": "Appears before paragraph",
+              "default": 0.6,
+              "min": 0,
+              "max": 3,
+              "step": 0.1,
+              "advanced": true,
+              "unit": "s"
+            },
+            {
+              "key": "heroes.tail",
+              "type": "number",
+              "label": "Stays after paragraph",
+              "default": 0.9,
+              "min": 0,
+              "max": 3,
+              "step": 0.1,
+              "advanced": true,
+              "unit": "s"
+            }
           ]
         }
       ]
